@@ -1,14 +1,14 @@
 # movie-service/Dockerfile
-FROM node:18.14.0
+FROM node:alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json .
 
-RUN npm install
+RUN npm install && npm cache clean --force
 
-COPY . .
+COPY src/ /app/
 
 EXPOSE 5001
 
-CMD ["node", "app.js"]
+CMD ["node", "server.js"]
