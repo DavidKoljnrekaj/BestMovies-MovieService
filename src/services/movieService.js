@@ -1,6 +1,7 @@
 const axios = require('axios');
-const { apiKey } = require('../config/movieApiConfig');
+//const { apiKey } = require('../config/movieApiConfig');
 
+const apiKey = '978c227f75cf1305f5de177f3773f57e';
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 exports.searchMovies = async (query) => {
