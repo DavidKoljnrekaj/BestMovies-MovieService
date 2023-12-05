@@ -12,7 +12,7 @@ router.get('/now_playing', movieController.getNowPlayingMovies);
 router.get('/popular', movieController.getPopularMovies);
 router.get('/top_rated', movieController.getTopRatedMovies);
 router.get('/upcoming', movieController.getUpcomingMovies);
-router.get('/movies', MovieController.getMovies);
+router.post('', movieController.getMovies);
 
 
 

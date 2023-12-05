@@ -161,14 +161,7 @@ exports.getUpcomingMovies = async (page) => {
 exports.getMovies = async (movieIds) => {
   try {
     const movies = await Promise.all(
-      movieIds.map(async (id) => {
-        const response = await axios.get(`${API_BASE_URL}/movie/${id}`, {
-          params: {
-            api_key: apiKey,
-          },
-        });
-        return response.data;
-      })
+      movieIds.map(id => this.getMovieDetails(id))
     );
     return movies;
   } catch (error) {
