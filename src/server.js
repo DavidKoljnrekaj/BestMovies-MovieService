@@ -22,6 +22,8 @@ app.use(cors({
 const PORT = process.env.PORT || 5001;
 const movieRoutes = require('./routes/movieRoutes');
 
+app.use(express.json());
+
 app.use('/movies', movieRoutes);
 app.use(express.static('build'));
 

@@ -157,3 +157,14 @@ exports.getUpcomingMovies = async (page) => {
     throw error;
   }
 };
+
+exports.getMovies = async (movieIds) => {
+  try {
+    const movies = await Promise.all(
+      movieIds.map(id => this.getMovieDetails(id))
+    );
+    return movies;
+  } catch (error) {
+    throw error;
+  }
+};

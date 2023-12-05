@@ -95,3 +95,12 @@ exports.getUpcomingMovies = async (req, res, next) => {
   }
 };
 
+exports.getMovies = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    const result = await movieService.getMovies(ids);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
