@@ -43,3 +43,18 @@ exports.getActorDetails = async (actorId) => {
     throw error;
   }
 };
+
+exports.getActorMovies = async (actorId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/person/${actorId}/movie_credits`, {
+      params: {
+        api_key: apiKey,
+      },
+    });
+    const movies = response.data.cast;
+    movies.sort((a, b) => b.popularity - a.popularity);
+    return movies.slice(0, 10);
+  } catch (error) {
+    throw error;
+  }
+};
