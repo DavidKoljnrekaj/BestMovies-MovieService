@@ -26,7 +26,7 @@ const castRoutes = require('./routes/castRoutes');
 app.use(express.json());
 
 app.use('/movies', movieRoutes);
-app.use('/movies/:movieId/cast', castRoutes);
+app.use('/movies/cast', castRoutes);
 app.use(express.static('build'));
 
 app.listen(PORT, () => {
