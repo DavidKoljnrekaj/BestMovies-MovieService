@@ -30,3 +30,16 @@ exports.getMovieDirectors = async (movieId) => {
     throw error;
   }
 };
+
+exports.getActorDetails = async (actorId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/person/${actorId}`, {
+      params: {
+        api_key: apiKey,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -19,3 +19,14 @@ exports.getDirectors = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+
+exports.getActorDetails = async (req, res) => {
+  try {
+    const actorId = req.params.actorId;
+    const actor = await castService.getActorDetails(actorId);
+    res.json(actor);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
