@@ -21,10 +21,12 @@ app.use(cors({
 
 const PORT = process.env.PORT || 5001;
 const movieRoutes = require('./routes/movieRoutes');
+const castRoutes = require('./routes/castRoutes');
 
 app.use(express.json());
 
 app.use('/movies', movieRoutes);
+app.use('/movies/cast', castRoutes);
 app.use(express.static('build'));
 
 app.listen(PORT, () => {
