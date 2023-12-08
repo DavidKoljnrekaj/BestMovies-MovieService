@@ -58,3 +58,19 @@ exports.getActorMovies = async (actorId) => {
     throw error;
   }
 };
+
+exports.getAverageRating = async (actorId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/person/${actorId}/movie_credits`, {
+      params: {
+        api_key: apiKey,
+      },
+    });
+    const movies = response.data.cast;
+    const totalRating = movies.reduce((total, movie) => total + movie.vote_average, 0);
+    const averageRating = totalRating / movies.length;
+    return averageRating;
+  } catch (error) {
+    throw error;
+  }
+};

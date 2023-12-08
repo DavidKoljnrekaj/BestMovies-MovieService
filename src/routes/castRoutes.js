@@ -6,6 +6,6 @@ router.get('/:movieId', castController.getCast);
 router.get('/:movieId/directors', castController.getDirectors);
 router.get('/:actorId/details', castController.getActorDetails);
 router.get('/:actorId/movies', castController.getActorMovies);
-
+router.get('/actor/:id/average-rating', castController.getAverageRating);
 
 module.exports = router;
