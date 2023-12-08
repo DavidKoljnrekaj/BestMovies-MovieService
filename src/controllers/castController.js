@@ -41,11 +41,11 @@ exports.getActorMovies = async (req, res) => {
   }
 };
 
-exports.getAverageRating = async (req, res) => {
+exports.getActorStatistics = async (req, res) => {
   try {
     const actorId = req.params.actorId;
-    const averageRating = await castService.getAverageRating(actorId);
-    res.json(averageRating);
+    const statistics = await castService.getActorStatistics(actorId);
+    res.json(statistics);
   } catch (error) {
     res.status(500).send(error.message);
   }
