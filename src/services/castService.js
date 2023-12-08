@@ -59,9 +59,11 @@ exports.getActorStatistics = async (actorId) => {
     const movies = await getMovies(actorId);
     const averageRating = await getAverageRating(movies);
     const mostKnownGenres = await getActorMostKnownGenres(movies);
+    const totalMovies = movies.length;
     return {
       averageRating,
       mostKnownGenres,
+      totalMovies,
     };
   } catch (error) {
     throw error;
