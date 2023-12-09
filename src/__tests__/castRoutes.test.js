@@ -42,4 +42,13 @@ describe('Cast Routes', () => {
 
       expect(res.body).not.toBeNull();
   });
+
+  it('should get statistics of an actor', async () => {
+    const res = await request(app)
+      .get('/2037/statistics')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+      expect(res.body).not.toBeNull();
+  });
 });

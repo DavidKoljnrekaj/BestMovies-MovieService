@@ -4,13 +4,17 @@ const axios = require('axios');
 const apiKey = '978c227f75cf1305f5de177f3773f57e';
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
-exports.searchMovies = async (query, adult, page) => {
+let cache = {
+  timestamp: null,
+  data: null,
+};
+
+exports.searchMovies = async (query, page) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/search/movie`, {
       params: {
         api_key: apiKey,
         query,
-        include_adult: adult,
         page,
       },
     });
@@ -71,6 +75,14 @@ exports.getMovieDetails = async (movieId) => {
 };
 
 exports.getTrendingMoviesToday = async () => {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  // If we have data in the cache and it's less than a day old, use it
+  if (cache.data && now - cache.timestamp < oneDay) {
+    return cache.data;
+  }
+
   try {
     const response = await axios.get(`${API_BASE_URL}/trending/movie/day`, {
       params: {
@@ -78,7 +90,23 @@ exports.getTrendingMoviesToday = async () => {
         language: 'en-US',
       },
     });
-    return response.data;
+    const movies = response.data.results;
+    const highestRatedMovie = getHighestRatedMovie(movies);
+    const mostPopularGenre = await getMostPopularGenre(movies);
+    const mostFrequentActor = await getMostFrequentActor(movies);
+    const data = {
+      movies: movies,
+      trending: {
+        movie: highestRatedMovie,
+        genre: mostPopularGenre,
+        actor: mostFrequentActor,
+      },
+    };
+    cache = {
+      timestamp: now,
+      data: data,
+    };
+    return data;
   } catch (error) {
     throw error;
   }
@@ -164,6 +192,59 @@ exports.getMovies = async (movieIds) => {
       movieIds.map(id => this.getMovieDetails(id))
     );
     return movies;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//helpers
+const getHighestRatedMovie = (movies) => {
+  return movies.reduce((highest, movie) => movie.vote_average > highest.vote_average ? movie : highest, movies[0]);
+};
+
+const getMostPopularGenre = async (movies) => {
+  const genreCounts = {};
+  movies.forEach(movie => {
+    movie.genre_ids.forEach(genre => {
+      genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+    });
+  });
+  const genres = await getGenres();
+  const mostPopularGenreId = parseInt(Object.keys(genreCounts).reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b));
+  const mostPopularGenre = genres.find(genre => genre.id === mostPopularGenreId);
+  return mostPopularGenre.name;
+};
+
+const getMostFrequentActor = async (movies) => {
+  const actorCounts = {};
+  for (const movie of movies) {
+    const response = await axios.get(`${API_BASE_URL}/movie/${movie.id}/credits`, {
+      params: {
+        api_key: apiKey,
+      },
+    });
+    response.data.cast.forEach(actor => {
+      actorCounts[actor.id] = (actorCounts[actor.id] || 0) + 1;
+    });
+  }
+  const mostFrequentActorId = Object.keys(actorCounts).reduce((a, b) => actorCounts[a] > actorCounts[b] ? a : b);
+  const actorResponse = await axios.get(`${API_BASE_URL}/person/${mostFrequentActorId}`, {
+    params: {
+      api_key: apiKey,
+    },
+  });
+  return actorResponse.data;
+};
+
+const getGenres = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/genre/movie/list`, {
+      params: {
+        api_key: apiKey,
+        language: 'en-US',
+      },
+    });
+    return response.data.genres;
   } catch (error) {
     throw error;
   }

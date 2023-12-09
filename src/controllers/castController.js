@@ -40,3 +40,13 @@ exports.getActorMovies = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+exports.getActorStatistics = async (req, res) => {
+  try {
+    const actorId = req.params.actorId;
+    const statistics = await castService.getActorStatistics(actorId);
+    res.json(statistics);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
