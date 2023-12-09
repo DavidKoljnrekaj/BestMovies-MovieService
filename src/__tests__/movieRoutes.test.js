@@ -42,8 +42,9 @@ describe('Movie Routes', () => {
         .expect('Content-Type', /json/)
         .expect(200);
   
-      expect(res.body).toHaveProperty('results');
-    });
+      expect(res.body).toHaveProperty('movies');
+      expect(res.body).toHaveProperty('trending');
+    } , 15000);
 
     it('should get popular movies', async () => {
       const res = await request(app)
@@ -83,6 +84,8 @@ describe('Movie Routes', () => {
   
       expect(res.body).toHaveProperty('results');
     });
+
+
 
 
   });
